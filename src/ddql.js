@@ -9,7 +9,6 @@ function DDQL(model, query) {
 				return true;
 			},
 			'<': function(a, b) {
-console.log(a, b, a < b);
 				return a < b;
 			},
 			'>': function(a, b) {
@@ -19,7 +18,7 @@ console.log(a, b, a < b);
 				return a > b || a == b;
 			}
 		},
-		next, index, p;
+		next, afterNext, index, p;
 
 
 	if (!new RegExp('(' + Object.keys(model).join('|') + ')').test(query))
@@ -30,16 +29,11 @@ console.log(a, b, a < b);
 
 		if (index !== -1) {
 			next = parts[index + 1];
+			afterNext = parts[index + 2];
 
-			if (next in keywords && !(parts[index + 2] in keywords) && !(parts[index + 2] in model)) {
-				if (!keywords[next].apply(null, [model[p], parts[index + 2]])) {
-					return false;
-				}
-			} else {
-				if (model[p] != next) {
-					return false;
-				}
-			}
+			if ((!(next in keywords) && model[p] != next) ||
+				(next in keywords && !(afterNext in keywords) && !(afterNext in model) && !keywords[next].apply(null, [model[p], afterNext])))
+				return false;
 		}
 	}
 
