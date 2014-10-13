@@ -12,6 +12,11 @@ describe('DDQL', function() {
 		paul   = new Model('paul'),
 		rogier = new Model('rogier');
 
+	it('should return false when query contains no properties',  function() {
+		expect(DDQL(daan, 'test daan')).toBe(false);
+		expect(DDQL(daan, 'nam daan')).toBe(false);
+	});
+
 	it('should return a boolean when searching for full text',  function() {
 		expect(DDQL(daan, 'name daan')).toBe(true);
 		expect(DDQL(daan, 'name da')).toBe(false);
@@ -36,6 +41,10 @@ describe('DDQL', function() {
 	describe('>, <, <=, >=', function() {
 		it('should handle dates', function() {
 			expect(DDQL(daan, 'online < 2014-10-14')).toBe(true);
+		});
+
+		it('should handle partial dates', function() {
+			expect(DDQL(daan, 'online < 2014-10')).toBe(true);
 		});
 
 		it('should handle date ranges', function() {
